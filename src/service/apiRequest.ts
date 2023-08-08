@@ -1,14 +1,12 @@
 import { SearchRequestParams, DetailRequestParams } from '../types';
 
+const apiUrl = import.meta.env.VITE_API_END_POINT;
+const apiKey = import.meta.env.VITE_API_KEY;
+
 export const request = async (
   params: SearchRequestParams | DetailRequestParams,
 ) => {
-  const requestParams = {
-    apiKey: import.meta.env.VITE_API_KEY,
-    ...params,
-  };
+  const requestParams = { apiKey, ...params };
   const queryString = new URLSearchParams(requestParams).toString();
-  return await fetch(
-    `${import.meta.env.VITE_API_END_POINT}?${queryString}`,
-  ).then((res) => res.json());
+  return await fetch(`${apiUrl}?${queryString}`).then((res) => res.json());
 };
