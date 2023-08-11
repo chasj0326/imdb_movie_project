@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useMovieStore } from '../store/movie';
+import { useRouter } from 'vue-router';
 
 const search = ref('');
-const movieStore = useMovieStore();
+const router = useRouter();
+
 const handleSubmit = async () => {
-  await movieStore.fetchMovies(search.value);
+  router.push({ name: 'Search', query: { q: search.value } });
   search.value = '';
 };
 </script>

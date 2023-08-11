@@ -1,23 +1,11 @@
 <script setup lang="ts">
-import MovieList from './components/MovieList.vue';
-import SearchBar from './components/SearchBar.vue';
+// import MovieList from './components/MovieList.vue';
+// import SearchBar from './components/SearchBar.vue';
+// import { useMovieStore } from './store/movie';
+
+// const movieStore = useMovieStore();
 </script>
 
 <template>
-  <div class="app__inner">
-    <SearchBar />
-    <MovieList />
-  </div>
+  <RouterView />
 </template>
-
-<style lang="scss" scoped>
-.app__inner {
-  font-family: 'Noto Sans KR', sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  background-color: black;
-  min-height: 100vh;
-}
-</style>

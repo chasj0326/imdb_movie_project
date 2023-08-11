@@ -5,9 +5,10 @@ const movieStore = useMovieStore();
 
 <template>
   <div class="movies">
-    <div
+    <router-link
       v-for="movie in movieStore.movies"
       :key="movie.imdbID"
+      :to="{ name: 'Search', query: { ...$route.query, movie: movie.imdbID } }"
       class="movies__item">
       <img
         :src="movie.Poster"
@@ -17,7 +18,7 @@ const movieStore = useMovieStore();
         <strong>{{ movie.Title }}</strong>
         <span :class="movie.Type">{{ movie.Type }}</span>
       </div>
-    </div>
+    </router-link>
   </div>
 </template>
 
@@ -31,10 +32,13 @@ const movieStore = useMovieStore();
   box-sizing: border-box;
   max-width: 1080px;
   .movies__item {
+    text-decoration: none;
     position: relative;
     border-radius: 5px;
     padding: 10px;
     transition: 0.3s;
+    height: fit-content;
+    cursor: pointer;
     &:hover {
       background-color: rgba(255, 255, 255, 0.15);
       transform: scale(1.05);
