@@ -7,7 +7,8 @@ const movieStore = useMovieStore();
 const route = useRoute();
 
 const handleQueryQ = async (q: LocationQueryValue | LocationQueryValue[]) => {
-  q ? await movieStore.fetchMovies(q.toString()) : movieStore.initMovies();
+  movieStore.initMovies();
+  q && (await movieStore.fetchMovies(q.toString()));
 };
 
 const handleQueryMovie = async (

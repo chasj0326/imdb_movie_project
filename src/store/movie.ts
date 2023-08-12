@@ -13,9 +13,9 @@ export const useMovieStore = defineStore('movie', {
     },
   },
   actions: {
-    async fetchMovies(title: string) {
-      const { Search } = await request({ s: title });
-      this.movies = Search;
+    async fetchMovies(title: string, page = 1) {
+      const { Search } = await request({ s: title, page: String(page) });
+      this.movies = this.movies.concat(Search);
     },
     async fetchMovie(id: string) {
       const movieDetail = await request({ i: id });

@@ -1,6 +1,41 @@
 <script setup lang="ts">
 import { useMovieStore } from '../store/movie';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { LoadingDots } from '../components';
+
 const movieStore = useMovieStore();
+const route = useRoute();
+const observerTrigger = ref(null);
+const page = ref(1);
+const searchQuery = ref(route.query.q);
+
+const observer = new IntersectionObserver(
+  (entries) => {
+    if (entries[0].isIntersecting) {
+      if (searchQuery.value === route.query.q) {
+        page.value += 1;
+      } else {
+        page.value = 1;
+        searchQuery.value = route.query.q;
+      }
+      if (page.value > 1 && searchQuery.value) {
+        movieStore.fetchMovies(String(searchQuery.value), page.value);
+      }
+    }
+  },
+  {
+    root: null,
+    rootMargin: '0px',
+    threshold: 1,
+  },
+);
+
+onMounted(() => {
+  if (observerTrigger.value) {
+    observer.observe(observerTrigger.value);
+  }
+});
 </script>
 
 <template>
@@ -23,6 +58,12 @@ const movieStore = useMovieStore();
         <span :class="movie.Type">{{ movie.Type }}</span>
       </div>
     </router-link>
+    <div
+      v-if="searchQuery"
+      ref="observerTrigger"
+      class="observer">
+      <LoadingDots />
+    </div>
   </div>
 </template>
 
@@ -97,6 +138,13 @@ const movieStore = useMovieStore();
         }
       }
     }
+  }
+  .observer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
   }
 }
 </style>
