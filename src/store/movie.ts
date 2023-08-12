@@ -5,11 +5,11 @@ import { request } from '../service/apiRequest';
 export const useMovieStore = defineStore('movie', {
   state: () => ({
     movies: [] as Movies,
-    selectMovie: {} as MovieInfo,
+    movie: {} as MovieInfo,
   }),
   getters: {
     isSelected(): number {
-      return Object.keys(this.selectMovie).length;
+      return Object.keys(this.movie).length;
     },
   },
   actions: {
@@ -19,13 +19,13 @@ export const useMovieStore = defineStore('movie', {
     },
     async fetchMovie(id: string) {
       const movieDetail = await request({ i: id });
-      this.selectMovie = movieDetail;
+      this.movie = movieDetail;
     },
     initMovies() {
       this.movies = [] as Movies;
     },
-    initSelectMovie() {
-      this.selectMovie = {} as MovieInfo;
+    initMovie() {
+      this.movie = {} as MovieInfo;
     },
   },
 });

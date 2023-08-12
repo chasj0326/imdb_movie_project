@@ -7,15 +7,15 @@ const movieStore = useMovieStore();
 const route = useRoute();
 
 const handleQueryQ = async (q: LocationQueryValue | LocationQueryValue[]) => {
-  q ? await movieStore.fetchMovies(q as string) : movieStore.initMovies();
+  q ? await movieStore.fetchMovies(q.toString()) : movieStore.initMovies();
 };
 
 const handleQueryMovie = async (
   movie: LocationQueryValue | LocationQueryValue[],
 ) => {
   movie
-    ? await movieStore.fetchMovie(movie as string)
-    : movieStore.initSelectMovie();
+    ? await movieStore.fetchMovie(movie.toString())
+    : movieStore.initMovie();
 };
 
 watch(route, async () => {
@@ -29,14 +29,16 @@ handleQueryMovie(route.query.movie);
 </script>
 
 <template>
-  <div class="app__inner">
-    <div
-      class="app__search"
-      :class="{ narrow: movieStore.isSelected }">
+  <div
+    class="app__inner"
+    :class="{ movieSelected: movieStore.isSelected }">
+    <div class="app__search">
       <SearchBar />
       <MovieList />
     </div>
-    <div class="app__detail">
+    <div
+      v-if="movieStore.isSelected"
+      class="app__detail">
       <MovieDetail />
     </div>
   </div>
@@ -47,22 +49,25 @@ handleQueryMovie(route.query.movie);
   font-family: 'Noto Sans KR', sans-serif;
   display: flex;
   background-color: black;
-  min-height: 100vh;
   justify-content: center;
-  overflow-x: hidden;
+  height: 100vh;
   .app__search {
     display: flex;
     flex-grow: 1;
     flex-shrink: 0;
     flex-direction: column;
     align-items: center;
-    height: 100vw;
     width: 100%;
     overflow-y: auto;
     padding: 20px;
     box-sizing: border-box;
     transition: 0.5s;
-    &.narrow {
+  }
+
+  &.movieSelected {
+    height: 100vh;
+    overflow-y: hidden;
+    .app__search {
       width: 300px;
     }
   }
@@ -72,7 +77,6 @@ handleQueryMovie(route.query.movie);
     width: 100%;
     flex-shrink: 1;
     box-sizing: border-box;
-    padding: 10px;
   }
 }
 </style>

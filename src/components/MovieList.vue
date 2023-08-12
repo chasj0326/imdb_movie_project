@@ -8,7 +8,11 @@ const movieStore = useMovieStore();
     <router-link
       v-for="movie in movieStore.movies"
       :key="movie.imdbID"
-      :to="{ name: 'Search', query: { ...$route.query, movie: movie.imdbID } }"
+      :to="{
+        name: 'Search',
+        query: { ...$route.query, movie: movie.imdbID },
+      }"
+      :class="{ selected: movie.imdbID === movieStore.movie.imdbID }"
       class="movies__item">
       <img
         :src="movie.Poster"
@@ -39,6 +43,10 @@ const movieStore = useMovieStore();
     transition: 0.3s;
     height: fit-content;
     cursor: pointer;
+    &.selected {
+      background-color: rgba(255, 255, 255, 0.15);
+      transform: scale(1.05);
+    }
     &:hover {
       background-color: rgba(255, 255, 255, 0.15);
       transform: scale(1.05);
