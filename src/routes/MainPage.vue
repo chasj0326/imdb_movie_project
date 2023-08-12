@@ -19,14 +19,29 @@ const handleQueryMovie = async (
     : movieStore.initMovie();
 };
 
+const scrollIntoMovie = (movie: LocationQueryValue | LocationQueryValue[]) => {
+  if (movie) {
+    const target = document.querySelector(`#${movie}`);
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }
+};
+
 watch(route, async () => {
   const { q, movie } = route.query;
   await handleQueryQ(q);
   await handleQueryMovie(movie);
+  scrollIntoMovie(movie);
 });
 
 handleQueryQ(route.query.q);
-handleQueryMovie(route.query.movie);
+handleQueryMovie(route.query.movie).then(() => {
+  scrollIntoMovie(route.query.movie);
+});
 </script>
 
 <template>
@@ -38,7 +53,7 @@ handleQueryMovie(route.query.movie);
       <MovieList />
     </div>
     <div
-      v-if="movieStore.isSelected"
+      :class="{ active: movieStore.isSelected }"
       class="app__detail">
       <MovieDetail />
     </div>
@@ -75,9 +90,12 @@ handleQueryMovie(route.query.movie);
 
   .app__detail {
     display: flex;
-    width: 100%;
+    width: 0px;
     flex-shrink: 1;
     box-sizing: border-box;
+    &.active {
+      width: 100%;
+    }
   }
 }
 </style>

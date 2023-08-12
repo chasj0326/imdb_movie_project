@@ -42,6 +42,7 @@ onMounted(() => {
   <div class="movies">
     <router-link
       v-for="movie in movieStore.movies"
+      :id="movie.imdbID"
       :key="movie.imdbID"
       :to="{
         name: 'Search',
@@ -58,12 +59,11 @@ onMounted(() => {
         <span :class="movie.Type">{{ movie.Type }}</span>
       </div>
     </router-link>
-    <div
-      v-if="searchQuery"
-      ref="observerTrigger"
-      class="observer">
-      <LoadingDots />
-    </div>
+  </div>
+  <div
+    ref="observerTrigger"
+    class="observer">
+    <LoadingDots />
   </div>
 </template>
 
@@ -139,12 +139,12 @@ onMounted(() => {
       }
     }
   }
-  .observer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-  }
+}
+.observer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  height: 200px;
 }
 </style>
