@@ -23,7 +23,6 @@ const handleQueryMovie = async (
 
 watch(route, async () => {
   const { q, movie } = route.query;
-  console.log(searchQuery.value, q);
   if (searchQuery.value !== q) {
     await handleQueryQ(q);
     searchQuery.value = q;
