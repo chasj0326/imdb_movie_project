@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { Movies, MovieInfo } from '../types';
 import axios from 'axios';
+import { LocationQueryValue } from 'vue-router';
 
 export const useMovieStore = defineStore('movie', {
   state: () => ({
@@ -31,6 +32,17 @@ export const useMovieStore = defineStore('movie', {
     },
     initMovie() {
       this.movie = {} as MovieInfo;
+    },
+    scrollIntoMovie(movie: LocationQueryValue | LocationQueryValue[]) {
+      if (movie) {
+        const target = document.querySelector(`#${movie}`);
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          });
+        }
+      }
     },
   },
 });

@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { MovieDetail, MovieList, SearchBar } from '../components';
 import { useMovieStore } from '../store/movie';
-import { watch } from 'vue';
+import { ref, watch } from 'vue';
 import { LocationQueryValue, useRoute } from 'vue-router';
 const movieStore = useMovieStore();
 const route = useRoute();
+const searchQuery = ref(route.query.q);
+const movieId = ref(route.query.movie);
 
 const handleQueryQ = async (q: LocationQueryValue | LocationQueryValue[]) => {
   movieStore.initMovies();
@@ -19,28 +21,23 @@ const handleQueryMovie = async (
     : movieStore.initMovie();
 };
 
-const scrollIntoMovie = (movie: LocationQueryValue | LocationQueryValue[]) => {
-  if (movie) {
-    const target = document.querySelector(`#${movie}`);
-    if (target) {
-      target.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    }
-  }
-};
-
 watch(route, async () => {
   const { q, movie } = route.query;
-  await handleQueryQ(q);
-  await handleQueryMovie(movie);
-  scrollIntoMovie(movie);
+  if (searchQuery.value !== q) {
+    await handleQueryQ(q);
+    searchQuery.value = q;
+  }
+  if (movieId.value != movie) {
+    handleQueryMovie(movie).then(() => {
+      movieStore.scrollIntoMovie(movie);
+    });
+    movieId.value = movie;
+  }
 });
 
-handleQueryQ(route.query.q);
-handleQueryMovie(route.query.movie).then(() => {
-  scrollIntoMovie(route.query.movie);
+handleQueryQ(searchQuery.value);
+handleQueryMovie(movieId.value).then(() => {
+  movieStore.scrollIntoMovie(movieId.value);
 });
 </script>
 
