@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { Movies, MovieInfo } from '../types';
-import { request } from '../service/apiRequest';
+import axios from 'axios';
 
 export const useMovieStore = defineStore('movie', {
   state: () => ({
@@ -14,12 +14,17 @@ export const useMovieStore = defineStore('movie', {
   },
   actions: {
     async fetchMovies(title: string, page = 1) {
-      const { Search } = await request({ s: title, page: String(page) });
-      this.movies = this.movies.concat(Search);
+      const { data } = await axios.post('/api/movie', {
+        s: title,
+        page: String(page),
+      });
+      this.movies = this.movies.concat(data.Search);
     },
     async fetchMovie(id: string) {
-      const movieDetail = await request({ i: id });
-      this.movie = movieDetail;
+      const { data } = await axios.post('/api/movie', {
+        i: id,
+      });
+      this.movie = data;
     },
     initMovies() {
       this.movies = [] as Movies;
