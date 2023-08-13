@@ -7,7 +7,7 @@ import { LoadingDots } from '../components';
 const movieStore = useMovieStore();
 const route = useRoute();
 const observerTrigger = ref(null);
-const page = ref(1);
+const page = ref(2);
 const searchQuery = ref(route.query.q);
 
 const observer = new IntersectionObserver(
@@ -16,10 +16,10 @@ const observer = new IntersectionObserver(
       if (searchQuery.value === route.query.q) {
         page.value += 1;
       } else {
-        page.value = 1;
+        page.value = 2;
         searchQuery.value = route.query.q;
       }
-      if (page.value > 1 && searchQuery.value) {
+      if (searchQuery.value) {
         movieStore.fetchMovies(String(searchQuery.value), page.value);
       }
     }
@@ -35,6 +35,7 @@ onMounted(() => {
   if (observerTrigger.value) {
     observer.observe(observerTrigger.value);
   }
+  searchQuery.value = route.query.q;
 });
 </script>
 

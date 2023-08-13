@@ -21,27 +21,15 @@ const handleQueryMovie = async (
     : movieStore.initMovie();
 };
 
-const scrollIntoMovie = (movie: LocationQueryValue | LocationQueryValue[]) => {
-  if (movie) {
-    const target = document.querySelector(`#${movie}`);
-    if (target) {
-      target.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    }
-  }
-};
-
-watch(route, () => {
+watch(route, async () => {
   const { q, movie } = route.query;
   if (searchQuery.value !== q) {
-    handleQueryQ(q);
+    await handleQueryQ(q);
     searchQuery.value = q;
   }
   if (movieId.value != movie) {
     handleQueryMovie(movie).then(() => {
-      scrollIntoMovie(movie);
+      movieStore.scrollIntoMovie(movie);
     });
     movieId.value = movie;
   }
@@ -49,7 +37,7 @@ watch(route, () => {
 
 handleQueryQ(searchQuery.value);
 handleQueryMovie(movieId.value).then(() => {
-  scrollIntoMovie(movieId.value);
+  movieStore.scrollIntoMovie(movieId.value);
 });
 </script>
 
