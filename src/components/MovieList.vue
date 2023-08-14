@@ -7,7 +7,7 @@ import { LoadingDots } from '../components';
 const movieStore = useMovieStore();
 const route = useRoute();
 const observerTrigger = ref(null);
-const page = ref(2);
+const page = ref(1);
 const searchQuery = ref(route.query.q);
 
 const observer = new IntersectionObserver(
@@ -16,10 +16,10 @@ const observer = new IntersectionObserver(
       if (searchQuery.value === route.query.q) {
         page.value += 1;
       } else {
-        page.value = 2;
+        page.value = 1;
         searchQuery.value = route.query.q;
       }
-      if (searchQuery.value) {
+      if (searchQuery.value && page.value > 1) {
         movieStore.fetchMovies(String(searchQuery.value), page.value);
       }
     }
@@ -62,6 +62,7 @@ onMounted(() => {
     </router-link>
   </div>
   <div
+    v-show="movieStore.isSearched"
     ref="observerTrigger"
     class="observer">
     <LoadingDots />

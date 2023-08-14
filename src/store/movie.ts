@@ -7,25 +7,43 @@ export const useMovieStore = defineStore('movie', {
   state: () => ({
     movies: [] as Movies,
     movie: {} as MovieInfo,
+    loading: false,
   }),
   getters: {
+    isSearched(): number {
+      return this.movies.length;
+    },
     isSelected(): number {
       return Object.keys(this.movie).length;
     },
   },
   actions: {
     async fetchMovies(title: string, page = 1) {
-      const { data } = await axios.post('/api/movie', {
-        s: title,
-        page: String(page),
-      });
-      this.movies = this.movies.concat(data.Search);
+      this.loading = true;
+      try {
+        const { data } = await axios.post('/api/movie', {
+          s: title,
+          page: String(page),
+        });
+        this.movies = this.movies.concat(data.Search);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.loading = false;
+      }
     },
     async fetchMovie(id: string) {
-      const { data } = await axios.post('/api/movie', {
-        i: id,
-      });
-      this.movie = data;
+      this.loading = true;
+      try {
+        const { data } = await axios.post('/api/movie', {
+          i: id,
+        });
+        this.movie = data;
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.loading = false;
+      }
     },
     initMovies() {
       this.movies = [] as Movies;
