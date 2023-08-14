@@ -129,6 +129,7 @@ const changeCategory = (title: string) => {
     z-index: 1;
     padding: 40px;
     width: calc(100% - 100px);
+    max-width: 1080px;
     &__tag {
       display: inline-flex;
       justify-content: center;
@@ -190,7 +191,6 @@ const changeCategory = (title: string) => {
       margin-top: 28px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
       .contents__info {
         display: flex;
         flex-direction: column;
@@ -200,11 +200,18 @@ const changeCategory = (title: string) => {
           width: 100px;
           font-weight: 700;
         }
+        @media (max-width: 800px) {
+          .label {
+            display: block;
+            margin: 5px 0;
+          }
+          margin-bottom: 20px;
+        }
       }
       .contents__image {
         img {
           height: 100%;
-          max-height: 240px;
+          max-height: 250px;
           @media (max-width: 1000px) {
             max-height: 180px;
           }
@@ -215,7 +222,6 @@ const changeCategory = (title: string) => {
       .nav {
         display: flex;
         align-items: center;
-        margin-top: 10px;
         gap: 10px;
         button {
           display: flex;

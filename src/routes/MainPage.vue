@@ -105,6 +105,7 @@ handleQueryMovie(movieId.value).then(() => {
     box-sizing: border-box;
     &.active {
       width: 100%;
+      overflow-y: auto;
     }
   }
 

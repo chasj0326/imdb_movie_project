@@ -32,6 +32,7 @@ button {
   border-radius: 15px;
   border: none;
   outline: none;
+  z-index: 101;
   background-color: rgba(255, 255, 255, 0.6);
   &:hover {
     background-color: rgba(255, 255, 255, 0.8);
