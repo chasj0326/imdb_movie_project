@@ -117,6 +117,7 @@ handleQueryMovie(movieId.value).then(() => {
     align-items: center;
     justify-content: center;
     color: white;
+    z-index: 100;
   }
 
   .app__tool-bar {

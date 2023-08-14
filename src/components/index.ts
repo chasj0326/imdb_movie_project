@@ -4,3 +4,4 @@ export { default as SearchBar } from './SearchBar.vue';
 export { default as LoadingDots } from './LoadingDots.vue';
 export { default as LoadingMovie } from './LoadingMovie.vue';
 export { default as ToolBar } from './ToolBar.vue';
+export { default as DetailView } from './DetailView.vue';
