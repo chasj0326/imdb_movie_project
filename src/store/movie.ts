@@ -37,6 +37,7 @@ export const useMovieStore = defineStore('movie', {
       try {
         const { data } = await axios.post('/api/movie', {
           i: id,
+          plot: 'full',
         });
         this.movie = data;
       } catch (error) {
