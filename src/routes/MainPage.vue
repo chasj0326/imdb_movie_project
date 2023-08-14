@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { MovieDetail, MovieList, SearchBar, ToolBar } from '../components';
+import {
+  MovieDetail,
+  MovieList,
+  SearchBar,
+  ToolBar,
+  LoadingMovie,
+} from '../components';
 import { useMovieStore } from '../store/movie';
 import { ref, watch } from 'vue';
 import { LocationQueryValue, useRoute } from 'vue-router';
@@ -56,7 +62,7 @@ handleQueryMovie(movieId.value).then(() => {
     <div
       v-if="movieStore.loading && (!movieStore.isSearched || movieId)"
       class="app__loading">
-      LOADING
+      <LoadingMovie />
     </div>
     <div class="app__tool-bar">
       <ToolBar />
@@ -106,7 +112,7 @@ handleQueryMovie(movieId.value).then(() => {
     position: absolute;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
