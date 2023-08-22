@@ -1,20 +1,25 @@
 import { defineStore } from 'pinia';
 import { Movies, MovieInfo } from '../types';
 import axios from 'axios';
-import { LocationQueryValue } from 'vue-router';
+
+interface StoreState {
+  movies: null | Movies;
+  movie: null | MovieInfo;
+  loading: boolean;
+}
 
 export const useMovieStore = defineStore('movie', {
-  state: () => ({
-    movies: [] as Movies,
-    movie: {} as MovieInfo,
+  state: (): StoreState => ({
+    movies: null,
+    movie: null,
     loading: false,
   }),
   getters: {
-    isSearched(): number {
-      return this.movies.length;
+    isSearched(): boolean {
+      return this.movies !== null;
     },
-    isSelected(): number {
-      return Object.keys(this.movie).length;
+    isSelected(): boolean {
+      return this.movie !== null;
     },
   },
   actions: {
@@ -25,7 +30,9 @@ export const useMovieStore = defineStore('movie', {
           s: title,
           page: String(page),
         });
-        this.movies = this.movies.concat(data.Search);
+        this.movies = this.movies
+          ? this.movies.concat(data.Search)
+          : data.Search;
       } catch (error) {
         console.error(error);
       } finally {
@@ -46,12 +53,12 @@ export const useMovieStore = defineStore('movie', {
       }
     },
     initMovies() {
-      this.movies = [] as Movies;
+      this.movies = null;
     },
     initMovie() {
-      this.movie = {} as MovieInfo;
+      this.movie = null;
     },
-    scrollIntoMovie(movie: LocationQueryValue | LocationQueryValue[]) {
+    scrollIntoMovie(movie: string) {
       if (movie) {
         const target = document.querySelector(`#${movie}`);
         if (target) {

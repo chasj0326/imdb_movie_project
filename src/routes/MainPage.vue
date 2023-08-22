@@ -8,42 +8,43 @@ import {
 } from '../components';
 import { useMovieStore } from '../store/movie';
 import { ref, watch } from 'vue';
-import { LocationQueryValue, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
+
 const movieStore = useMovieStore();
 const route = useRoute();
-const searchQuery = ref(route.query.q);
-const movieId = ref(route.query.movie);
+const keywordRef = ref(route.query.keyword);
+const movieRef = ref(route.query.movie);
 
-const handleQueryQ = async (q: LocationQueryValue | LocationQueryValue[]) => {
+const handleQueryKeyword = async (keyword: string) => {
   movieStore.initMovies();
-  q && (await movieStore.fetchMovies(q.toString()));
+  await movieStore.fetchMovies(keyword);
 };
 
-const handleQueryMovie = async (
-  movie: LocationQueryValue | LocationQueryValue[],
-) => {
-  movie
-    ? await movieStore.fetchMovie(movie.toString())
-    : movieStore.initMovie();
+const handleQueryMovie = async (movie: string) => {
+  movieStore.initMovie();
+  await movieStore.fetchMovie(movie);
 };
 
 watch(route, async () => {
-  const { q, movie } = route.query;
-  if (searchQuery.value !== q) {
-    await handleQueryQ(q);
-    searchQuery.value = q;
+  const { keyword, movie } = route.query;
+  if (keywordRef.value !== keyword && typeof keyword === 'string') {
+    await handleQueryKeyword(keyword);
+    keywordRef.value = keyword;
   }
-  if (movieId.value != movie) {
+  if (movie && movieRef.value !== movie && typeof movie === 'string') {
     movieStore.scrollIntoMovie(movie);
-    handleQueryMovie(movie);
-    movieId.value = movie;
+    await handleQueryMovie(movie);
+    movieRef.value = movie;
   }
 });
 
-handleQueryQ(searchQuery.value);
-handleQueryMovie(movieId.value).then(() => {
-  movieStore.scrollIntoMovie(movieId.value);
-});
+if (typeof keywordRef.value === 'string') {
+  handleQueryKeyword(keywordRef.value);
+}
+if (typeof movieRef.value === 'string') {
+  movieStore.scrollIntoMovie(movieRef.value);
+  handleQueryMovie(movieRef.value);
+}
 </script>
 
 <template>
@@ -60,7 +61,7 @@ handleQueryMovie(movieId.value).then(() => {
       <MovieDetail />
     </div>
     <div
-      v-if="movieStore.loading && (!movieStore.isSearched || movieId)"
+      v-if="movieStore.loading && (!movieStore.isSearched || movieRef)"
       class="app__loading">
       <LoadingMovie />
     </div>

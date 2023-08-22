@@ -8,16 +8,16 @@ const movieStore = useMovieStore();
 const route = useRoute();
 const observerTrigger = ref(null);
 const page = ref(1);
-const searchQuery = ref(route.query.q);
+const searchQuery = ref(route.query.keyword);
 
 const observer = new IntersectionObserver(
   (entries) => {
     if (entries[0].isIntersecting) {
-      if (searchQuery.value === route.query.q) {
+      if (searchQuery.value === route.query.keyword) {
         page.value += 1;
       } else {
         page.value = 1;
-        searchQuery.value = route.query.q;
+        searchQuery.value = route.query.keyword;
       }
       if (searchQuery.value && page.value > 1) {
         movieStore.fetchMovies(String(searchQuery.value), page.value);
@@ -35,7 +35,7 @@ onMounted(() => {
   if (observerTrigger.value) {
     observer.observe(observerTrigger.value);
   }
-  searchQuery.value = route.query.q;
+  searchQuery.value = route.query.keyword;
 });
 </script>
 
@@ -49,7 +49,9 @@ onMounted(() => {
         name: 'Search',
         query: { ...$route.query, movie: movie.imdbID },
       }"
-      :class="{ selected: movie.imdbID === movieStore.movie.imdbID }"
+      :class="{
+        selected: movie.imdbID === movieStore.movie?.imdbID,
+      }"
       class="movies__item">
       <img
         :src="movie.Poster"

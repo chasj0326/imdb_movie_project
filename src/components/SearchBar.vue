@@ -6,7 +6,7 @@ const search = ref('');
 const router = useRouter();
 
 const handleSubmit = async () => {
-  router.push({ name: 'Search', query: { q: search.value } });
+  router.push({ name: 'Search', query: { keyword: search.value } });
   search.value = '';
 };
 </script>
