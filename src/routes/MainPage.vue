@@ -16,23 +16,36 @@ const keywordRef = ref(route.query.keyword);
 const movieRef = ref(route.query.movie);
 
 const handleQueryKeyword = async (keyword: string) => {
-  movieStore.initMovies();
   await movieStore.fetchMovies(keyword);
 };
 
 const handleQueryMovie = async (movie: string) => {
-  movieStore.initMovie();
   await movieStore.fetchMovie(movie);
+};
+
+const scrollIntoMovie = (movie: string) => {
+  const target = document.querySelector(`#${movie}`);
+  if (target) {
+    target.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
+  }
 };
 
 watch(route, async () => {
   const { keyword, movie } = route.query;
+  if (typeof keyword !== 'string' && typeof movie !== 'string') {
+    movieStore.$reset();
+    return;
+  }
   if (keywordRef.value !== keyword && typeof keyword === 'string') {
+    movieStore.$reset();
     await handleQueryKeyword(keyword);
     keywordRef.value = keyword;
   }
-  if (movie && movieRef.value !== movie && typeof movie === 'string') {
-    movieStore.scrollIntoMovie(movie);
+  if (movieRef.value !== movie && typeof movie === 'string') {
+    scrollIntoMovie(movie);
     await handleQueryMovie(movie);
     movieRef.value = movie;
   }
@@ -42,7 +55,7 @@ if (typeof keywordRef.value === 'string') {
   handleQueryKeyword(keywordRef.value);
 }
 if (typeof movieRef.value === 'string') {
-  movieStore.scrollIntoMovie(movieRef.value);
+  scrollIntoMovie(movieRef.value);
   handleQueryMovie(movieRef.value);
 }
 </script>
@@ -50,18 +63,18 @@ if (typeof movieRef.value === 'string') {
 <template>
   <div
     class="app__inner"
-    :class="{ movieSelected: movieStore.isSelected }">
+    :class="{ movieSelected: movieStore.movie }">
     <div class="app__search">
       <SearchBar />
       <MovieList />
     </div>
     <div
-      :class="{ active: movieStore.isSelected }"
+      :class="{ active: movieStore.movie }"
       class="app__detail">
       <MovieDetail />
     </div>
     <div
-      v-if="movieStore.loading && (!movieStore.isSearched || movieRef)"
+      v-if="movieStore.loading"
       class="app__loading">
       <LoadingMovie />
     </div>

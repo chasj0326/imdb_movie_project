@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useMovieStore } from '../store/movie';
+import { useMovieStore } from '../store/useMovieStore';
 import DetailView from './DetailView.vue';
 const movieStore = useMovieStore();
 const category = ref('');
@@ -15,7 +15,7 @@ const changeCategory = (title: string) => {
 
 <template>
   <div
-    v-if="movieStore.isSelected"
+    v-if="movieStore.movie"
     class="movie__container"
     :style="`--background: url(${movieStore.movie.Poster})`">
     <div class="movie__item">

@@ -14,21 +14,13 @@ export const useMovieStore = defineStore('movie', {
     movie: null,
     loading: false,
   }),
-  getters: {
-    isSearched(): boolean {
-      return this.movies !== null;
-    },
-    isSelected(): boolean {
-      return this.movie !== null;
-    },
-  },
   actions: {
     async fetchMovies(title: string, page = 1) {
       this.loading = true;
       try {
         const { data } = await axios.post('/api/movie', {
           s: title,
-          page: String(page),
+          page,
         });
         this.movies = this.movies
           ? this.movies.concat(data.Search)
@@ -50,23 +42,6 @@ export const useMovieStore = defineStore('movie', {
         console.error(error);
       } finally {
         this.loading = false;
-      }
-    },
-    initMovies() {
-      this.movies = null;
-    },
-    initMovie() {
-      this.movie = null;
-    },
-    scrollIntoMovie(movie: string) {
-      if (movie) {
-        const target = document.querySelector(`#${movie}`);
-        if (target) {
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-          });
-        }
       }
     },
   },
