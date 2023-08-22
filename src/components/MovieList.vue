@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useMovieStore } from '../store/movie';
+import { useMovieStore } from '../store/useMovieStore';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { LoadingDots } from '../components';

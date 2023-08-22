@@ -6,7 +6,7 @@ import {
   ToolBar,
   LoadingMovie,
 } from '../components';
-import { useMovieStore } from '../store/movie';
+import { useMovieStore } from '../store/useMovieStore';
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
