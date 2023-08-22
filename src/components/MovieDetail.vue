@@ -5,11 +5,7 @@ import DetailView from './DetailView.vue';
 const movieStore = useMovieStore();
 const category = ref('');
 const changeCategory = (title: string) => {
-  if (title === category.value) {
-    category.value = '';
-  } else {
-    category.value = title;
-  }
+  category.value = title === category.value ? '' : title;
 };
 </script>
 
