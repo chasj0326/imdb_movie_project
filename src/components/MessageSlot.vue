@@ -16,6 +16,8 @@ const icon = computed(() => {
       return '🚨';
     case 'guide':
       return 'ℹ️';
+    case 'home':
+      return '🍿';
     default:
       return '';
   }
@@ -53,6 +55,11 @@ const icon = computed(() => {
   &.error {
     border: 1px solid #fe919177;
     color: #fe9191;
+  }
+  &.home {
+    color: rgb(255, 255, 255);
+    align-items: flex-start;
+    background-color: rgba(255, 255, 255, 0.2);
   }
   .icon {
     margin-right: 10px;

@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router';
 import { LoadingDots } from '../components';
 import { checkMoviePoster } from '../common/checkPoster';
 import MessageSlot from './MessageSlot.vue';
+import { Movie } from '../types';
 
 const movieStore = useMovieStore();
 const route = useRoute();
@@ -39,9 +40,20 @@ onMounted(() => {
   }
   searchQuery.value = route.query.keyword;
 });
+
+const addMyMovies = (movie: Movie) => {
+  const myMovies = JSON.parse(localStorage.getItem('my-movies') || '[]');
+  if (myMovies.every((myMovie: Movie) => myMovie.imdbID !== movie.imdbID))
+    localStorage.setItem('my-movies', JSON.stringify([...myMovies, movie]));
+};
 </script>
 
 <template>
+  <MessageSlot
+    v-if="!$route.query.keyword && movieStore.movies"
+    type="home">
+    최근 본 영화
+  </MessageSlot>
   <div class="movies">
     <router-link
       v-for="movie in movieStore.movies"
@@ -54,7 +66,8 @@ onMounted(() => {
       :class="{
         selected: movie.imdbID === movieStore.movie?.imdbID,
       }"
-      class="movies__item">
+      class="movies__item"
+      @click="addMyMovies(movie)">
       <img
         :src="checkMoviePoster(movie.Poster)"
         :alt="movie.Title" />
@@ -72,7 +85,7 @@ onMounted(() => {
   </MessageSlot>
   <div
     v-else
-    v-show="movieStore.movies"
+    v-show="movieStore.movies && $route.query.keyword"
     ref="observerTrigger"
     class="observer">
     <LoadingDots />

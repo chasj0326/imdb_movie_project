@@ -37,6 +37,8 @@ watch(route, async () => {
   const { keyword, movie } = route.query;
   if (typeof keyword !== 'string' && typeof movie !== 'string') {
     movieStore.$reset();
+    const myMovies = JSON.parse(localStorage.getItem('my-movies') || '[]');
+    myMovies.length && (movieStore.movies = myMovies);
     return;
   }
   if (keywordRef.value !== keyword && typeof keyword === 'string') {
@@ -57,6 +59,10 @@ if (typeof keywordRef.value === 'string') {
 if (typeof movieRef.value === 'string') {
   scrollIntoMovie(movieRef.value);
   handleQueryMovie(movieRef.value);
+}
+if (!keywordRef.value) {
+  const myMovies = JSON.parse(localStorage.getItem('my-movies') || '[]');
+  myMovies.length && (movieStore.movies = myMovies);
 }
 </script>
 
