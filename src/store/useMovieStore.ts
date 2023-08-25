@@ -6,6 +6,7 @@ interface StoreState {
   movies: null | Movies;
   movie: null | MovieInfo;
   loading: boolean;
+  movieFull: boolean;
 }
 
 export const useMovieStore = defineStore('movie', {
@@ -13,6 +14,7 @@ export const useMovieStore = defineStore('movie', {
     movies: null,
     movie: null,
     loading: false,
+    movieFull: false,
   }),
   actions: {
     async fetchMovies(title: string, page = 1) {
@@ -22,6 +24,9 @@ export const useMovieStore = defineStore('movie', {
           s: title,
           page,
         });
+        if (!data.Search || data.Search.length < 10) {
+          this.movieFull = true;
+        }
         this.movies = this.movies
           ? this.movies.concat(data.Search)
           : data.Search;

@@ -3,6 +3,7 @@ import { useMovieStore } from '../store/useMovieStore';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { LoadingDots } from '../components';
+import MessageSlot from './MessageSlot.vue';
 
 const movieStore = useMovieStore();
 const route = useRoute();
@@ -63,7 +64,13 @@ onMounted(() => {
       </div>
     </router-link>
   </div>
+  <MessageSlot
+    v-if="movieStore.movieFull"
+    type="default">
+    불러올 영화가 없습니다!
+  </MessageSlot>
   <div
+    v-else
     v-show="movieStore.movies"
     ref="observerTrigger"
     class="observer">

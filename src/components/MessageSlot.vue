@@ -14,8 +14,10 @@ const icon = computed(() => {
       return '⚠️';
     case 'error':
       return '🚨';
-    default:
+    case 'guide':
       return 'ℹ️';
+    default:
+      return '';
   }
 });
 </script>
@@ -37,14 +39,19 @@ const icon = computed(() => {
   align-items: center;
   padding: 10px 42px 10px 30px;
   width: fit-content;
-  border: 1px solid #cccccc8c;
   border-radius: 10px;
-  margin-top: 10px;
-  color: rgb(223, 243, 255);
+  margin: 10px 0;
+  color: rgba(255, 255, 255, 0.584);
+  &.guide {
+    border: 1px solid rgba(223, 243, 255, 0.5);
+    color: rgb(223, 243, 255);
+  }
   &.warn {
+    border: 1px solid #ffeaa78c;
     color: #ffeaa7;
   }
   &.error {
+    border: 1px solid #fe919177;
     color: #fe9191;
   }
   .icon {
@@ -52,8 +59,15 @@ const icon = computed(() => {
     margin-bottom: 2px;
     font-size: 16px;
   }
+  &.error,
+  &.warn,
+  &.guide {
+    .content {
+      font-size: 16px;
+    }
+  }
   .content {
-    font-size: 16px;
+    font-size: 20px;
   }
 }
 </style>

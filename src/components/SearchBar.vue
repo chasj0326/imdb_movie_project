@@ -9,11 +9,10 @@ const router = useRouter();
 
 const handleSubmit = async () => {
   router.push({ name: 'Search', query: { keyword: search.value } });
-  search.value = '';
 };
 
-const defaultMsg = {
-  type: 'default',
+const guideMsg = {
+  type: 'guide',
   content: '모두 영문자로, 3글자 이상의 단어를 입력해주세요.',
 };
 const warningEng = {
@@ -27,7 +26,7 @@ const errorLength = {
 
 const message = computed(() => {
   if (!search.value) {
-    return defaultMsg;
+    return guideMsg;
   }
   if (!/^[a-zA-Z]+$/.test(search.value)) {
     return warningEng;
