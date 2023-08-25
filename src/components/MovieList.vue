@@ -3,6 +3,7 @@ import { useMovieStore } from '../store/useMovieStore';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { LoadingDots } from '../components';
+import { checkMoviePoster } from '../common/checkPoster';
 import MessageSlot from './MessageSlot.vue';
 
 const movieStore = useMovieStore();
@@ -55,7 +56,7 @@ onMounted(() => {
       }"
       class="movies__item">
       <img
-        :src="movie.Poster"
+        :src="checkMoviePoster(movie.Poster)"
         :alt="movie.Title" />
       <div class="movies__item__contents">
         <p>{{ movie.Year }}</p>

@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useMovieStore } from '../store/useMovieStore';
 import DetailView from './DetailView.vue';
+import { checkMoviePoster } from '../common/checkPoster';
 const movieStore = useMovieStore();
 const category = ref('');
 const changeCategory = (title: string) => {
@@ -56,7 +57,7 @@ const changeCategory = (title: string) => {
           </div>
         </div>
         <div class="contents__image">
-          <img :src="movieStore.movie.Poster" />
+          <img :src="checkMoviePoster(movieStore.movie.Poster)" />
         </div>
       </div>
       <div class="movie__item__detail">
