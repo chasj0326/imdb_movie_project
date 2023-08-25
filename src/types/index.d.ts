@@ -16,7 +16,7 @@ export interface SearchRequestParams {
 
 export interface DetailRequestParams {
   i: string;
-  plot?: 'short' | 'full';
+  plot?: 'short';
 }
 
 export interface MovieInfo {
