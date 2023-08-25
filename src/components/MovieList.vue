@@ -1,23 +1,26 @@
 <script setup lang="ts">
-import { useMovieStore } from '../store/movie';
+import { useMovieStore } from '../store/useMovieStore';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { LoadingDots } from '../components';
+import { checkMoviePoster } from '../common/checkPoster';
+import MessageSlot from './MessageSlot.vue';
+import { Movie } from '../types';
 
 const movieStore = useMovieStore();
 const route = useRoute();
 const observerTrigger = ref(null);
 const page = ref(1);
-const searchQuery = ref(route.query.q);
+const searchQuery = ref(route.query.keyword);
 
 const observer = new IntersectionObserver(
   (entries) => {
     if (entries[0].isIntersecting) {
-      if (searchQuery.value === route.query.q) {
+      if (searchQuery.value === route.query.keyword) {
         page.value += 1;
       } else {
         page.value = 1;
-        searchQuery.value = route.query.q;
+        searchQuery.value = route.query.keyword;
       }
       if (searchQuery.value && page.value > 1) {
         movieStore.fetchMovies(String(searchQuery.value), page.value);
@@ -35,11 +38,22 @@ onMounted(() => {
   if (observerTrigger.value) {
     observer.observe(observerTrigger.value);
   }
-  searchQuery.value = route.query.q;
+  searchQuery.value = route.query.keyword;
 });
+
+const addMyMovies = (movie: Movie) => {
+  const myMovies = JSON.parse(localStorage.getItem('my-movies') || '[]');
+  if (myMovies.every((myMovie: Movie) => myMovie.imdbID !== movie.imdbID))
+    localStorage.setItem('my-movies', JSON.stringify([...myMovies, movie]));
+};
 </script>
 
 <template>
+  <MessageSlot
+    v-if="!$route.query.keyword && movieStore.movies"
+    type="home">
+    최근 본 영화
+  </MessageSlot>
   <div class="movies">
     <router-link
       v-for="movie in movieStore.movies"
@@ -49,10 +63,13 @@ onMounted(() => {
         name: 'Search',
         query: { ...$route.query, movie: movie.imdbID },
       }"
-      :class="{ selected: movie.imdbID === movieStore.movie.imdbID }"
-      class="movies__item">
+      :class="{
+        selected: movie.imdbID === movieStore.movie?.imdbID,
+      }"
+      class="movies__item"
+      @click="addMyMovies(movie)">
       <img
-        :src="movie.Poster"
+        :src="checkMoviePoster(movie.Poster)"
         :alt="movie.Title" />
       <div class="movies__item__contents">
         <p>{{ movie.Year }}</p>
@@ -61,8 +78,14 @@ onMounted(() => {
       </div>
     </router-link>
   </div>
+  <MessageSlot
+    v-if="movieStore.movieFull"
+    type="default">
+    불러올 영화가 없습니다!
+  </MessageSlot>
   <div
-    v-show="movieStore.isSearched"
+    v-else
+    v-show="movieStore.movies && $route.query.keyword"
     ref="observerTrigger"
     class="observer">
     <LoadingDots />

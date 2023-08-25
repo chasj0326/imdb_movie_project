@@ -8,9 +8,17 @@ const scrollToTop = () => {
     });
   }
 };
+
+const clearMyMovies = () => {
+  localStorage.setItem('my-movies', '[]');
+  location.reload();
+};
 </script>
 
 <template>
+  <button @click="clearMyMovies">
+    <i class="fa-solid fa-trash"></i>
+  </button>
   <button @click="$router.push('/')">
     <i class="fa-solid fa-house"></i>
   </button>
@@ -24,12 +32,12 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 5px;
-  font-size: 18px;
-  width: 30px;
-  height: 30px;
+  margin-right: 10px;
+  font-size: 20px;
+  width: 36px;
+  height: 36px;
   cursor: pointer;
-  border-radius: 15px;
+  border-radius: 18px;
   border: none;
   outline: none;
   z-index: 101;

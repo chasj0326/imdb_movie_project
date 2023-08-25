@@ -14,7 +14,7 @@ export default createRouter({
           path: '/search',
           component: MainPage,
           props: (route) => ({
-            query: route.query.q,
+            keyword: route.query.keyword,
             movieId: route.query.movie,
           }),
         },

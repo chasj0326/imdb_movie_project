@@ -1,31 +1,35 @@
 import { defineStore } from 'pinia';
 import { Movies, MovieInfo } from '../types';
 import axios from 'axios';
-import { LocationQueryValue } from 'vue-router';
+
+interface StoreState {
+  movies: null | Movies;
+  movie: null | MovieInfo;
+  loading: boolean;
+  movieFull: boolean;
+}
 
 export const useMovieStore = defineStore('movie', {
-  state: () => ({
-    movies: [] as Movies,
-    movie: {} as MovieInfo,
+  state: (): StoreState => ({
+    movies: null,
+    movie: null,
     loading: false,
+    movieFull: false,
   }),
-  getters: {
-    isSearched(): number {
-      return this.movies.length;
-    },
-    isSelected(): number {
-      return Object.keys(this.movie).length;
-    },
-  },
   actions: {
     async fetchMovies(title: string, page = 1) {
       this.loading = true;
       try {
         const { data } = await axios.post('/api/movie', {
           s: title,
-          page: String(page),
+          page,
         });
-        this.movies = this.movies.concat(data.Search);
+        if (!data.Search || data.Search.length < 10) {
+          this.movieFull = true;
+        }
+        this.movies = this.movies
+          ? this.movies.concat(data.Search)
+          : data.Search;
       } catch (error) {
         console.error(error);
       } finally {
@@ -43,23 +47,6 @@ export const useMovieStore = defineStore('movie', {
         console.error(error);
       } finally {
         this.loading = false;
-      }
-    },
-    initMovies() {
-      this.movies = [] as Movies;
-    },
-    initMovie() {
-      this.movie = {} as MovieInfo;
-    },
-    scrollIntoMovie(movie: LocationQueryValue | LocationQueryValue[]) {
-      if (movie) {
-        const target = document.querySelector(`#${movie}`);
-        if (target) {
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-          });
-        }
       }
     },
   },

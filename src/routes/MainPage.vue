@@ -6,61 +6,81 @@ import {
   ToolBar,
   LoadingMovie,
 } from '../components';
-import { useMovieStore } from '../store/movie';
+import { useMovieStore } from '../store/useMovieStore';
 import { ref, watch } from 'vue';
-import { LocationQueryValue, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
+
 const movieStore = useMovieStore();
 const route = useRoute();
-const searchQuery = ref(route.query.q);
-const movieId = ref(route.query.movie);
+const keywordRef = ref(route.query.keyword);
+const movieRef = ref(route.query.movie);
 
-const handleQueryQ = async (q: LocationQueryValue | LocationQueryValue[]) => {
-  movieStore.initMovies();
-  q && (await movieStore.fetchMovies(q.toString()));
+const handleQueryKeyword = async (keyword: string) => {
+  await movieStore.fetchMovies(keyword);
 };
 
-const handleQueryMovie = async (
-  movie: LocationQueryValue | LocationQueryValue[],
-) => {
-  movie
-    ? await movieStore.fetchMovie(movie.toString())
-    : movieStore.initMovie();
+const handleQueryMovie = async (movie: string) => {
+  await movieStore.fetchMovie(movie);
+};
+
+const scrollIntoMovie = (movie: string) => {
+  const target = document.querySelector(`#${movie}`);
+  if (target) {
+    target.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
+  }
 };
 
 watch(route, async () => {
-  const { q, movie } = route.query;
-  if (searchQuery.value !== q) {
-    await handleQueryQ(q);
-    searchQuery.value = q;
+  const { keyword, movie } = route.query;
+  if (typeof keyword !== 'string' && typeof movie !== 'string') {
+    movieStore.$reset();
+    const myMovies = JSON.parse(localStorage.getItem('my-movies') || '[]');
+    myMovies.length && (movieStore.movies = myMovies);
+    return;
   }
-  if (movieId.value != movie) {
-    movieStore.scrollIntoMovie(movie);
-    handleQueryMovie(movie);
-    movieId.value = movie;
+  if (keywordRef.value !== keyword && typeof keyword === 'string') {
+    movieStore.$reset();
+    await handleQueryKeyword(keyword);
+    keywordRef.value = keyword;
+  }
+  if (movieRef.value !== movie && typeof movie === 'string') {
+    scrollIntoMovie(movie);
+    await handleQueryMovie(movie);
+    movieRef.value = movie;
   }
 });
 
-handleQueryQ(searchQuery.value);
-handleQueryMovie(movieId.value).then(() => {
-  movieStore.scrollIntoMovie(movieId.value);
-});
+if (typeof keywordRef.value === 'string') {
+  handleQueryKeyword(keywordRef.value);
+}
+if (typeof movieRef.value === 'string') {
+  scrollIntoMovie(movieRef.value);
+  handleQueryMovie(movieRef.value);
+}
+if (!keywordRef.value) {
+  const myMovies = JSON.parse(localStorage.getItem('my-movies') || '[]');
+  myMovies.length && (movieStore.movies = myMovies);
+}
 </script>
 
 <template>
   <div
     class="app__inner"
-    :class="{ movieSelected: movieStore.isSelected }">
+    :class="{ movieSelected: movieStore.movie }">
     <div class="app__search">
       <SearchBar />
       <MovieList />
     </div>
     <div
-      :class="{ active: movieStore.isSelected }"
+      :class="{ active: movieStore.movie }"
       class="app__detail">
       <MovieDetail />
     </div>
     <div
-      v-if="movieStore.loading && (!movieStore.isSearched || movieId)"
+      v-if="movieStore.loading"
       class="app__loading">
       <LoadingMovie />
     </div>
