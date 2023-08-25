@@ -64,7 +64,7 @@ onMounted(() => {
     </router-link>
   </div>
   <div
-    v-show="movieStore.isSearched"
+    v-show="movieStore.movies"
     ref="observerTrigger"
     class="observer">
     <LoadingDots />

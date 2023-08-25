@@ -53,6 +53,7 @@ const handleSubmit = async () => {
       outline: none;
       border: none;
       font-size: 20px;
+      cursor: pointer;
     }
   }
 }
