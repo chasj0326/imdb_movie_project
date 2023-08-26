@@ -20,7 +20,7 @@ export const useMovieStore = defineStore('movie', {
     async fetchMovies(title: string, page = 1) {
       this.loading = true;
       try {
-        const { data } = await axios.post('/api/movie', {
+        const { data } = await axios.post<SearchResult>('/api/movie', {
           s: title,
           page,
         });
@@ -39,7 +39,7 @@ export const useMovieStore = defineStore('movie', {
     async fetchMovie(id: string) {
       this.loading = true;
       try {
-        const { data } = await axios.post('/api/movie', {
+        const { data } = await axios.post<MovieInfo>('/api/movie', {
           i: id,
         });
         this.movie = data;
