@@ -8,7 +8,7 @@ const search = ref('');
 const router = useRouter();
 
 const handleSubmit = async () => {
-  router.push({ name: 'Search', query: { keyword: search.value } });
+  router.push({ name: 'Search', query: { keyword: search.value.trim() } });
 };
 
 const guideMsg = {
@@ -28,7 +28,7 @@ const message = computed(() => {
   if (!search.value) {
     return guideMsg;
   }
-  if (!/^[a-zA-Z]+$/.test(search.value)) {
+  if (!/^[a-zA-Z\s]+$/.test(search.value)) {
     return warningEng;
   }
   if (search.value.length < 3) {
@@ -38,7 +38,7 @@ const message = computed(() => {
 });
 
 const submitDisabled = computed(() => {
-  return search.value.length < 3 || !/^[a-zA-Z]+$/.test(search.value);
+  return search.value.length < 3 || !/^[a-zA-Z\s]+$/.test(search.value);
 });
 
 onMounted(() => {
