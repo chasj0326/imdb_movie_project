@@ -79,7 +79,7 @@ const addMyMovies = (movie: Movie) => {
     </router-link>
   </div>
   <MessageSlot
-    v-if="movieStore.movieFull"
+    v-if="movieStore.searchCompleted"
     type="default">
     불러올 영화가 없습니다!
   </MessageSlot>

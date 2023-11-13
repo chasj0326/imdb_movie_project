@@ -8,6 +8,12 @@ export interface Movie {
   Poster: string;
 }
 
+export interface SearchResult {
+  Search: Movies;
+  totalResults: string;
+  Response: string;
+}
+
 export interface SearchRequestParams {
   s: string;
   y?: string;
